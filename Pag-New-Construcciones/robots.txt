@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gabrielconstrucciones.com.ar/sitemap.xml
+
