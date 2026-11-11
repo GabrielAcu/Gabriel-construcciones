@@ -1,0 +1,125 @@
+/* ============================================================
+   Gabriel Construcciones – Estilos específicos de Servicios
+   servicios.css
+   ============================================================ */
+
+/* ── GRID DE SERVICIOS (3 columnas, 6 tarjetas en total) ────── */
+.services-grid-full {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.service-card {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(20, 39, 48, .04);
+  transition: transform .2s ease, box-shadow .2s ease;
+  display: flex;
+  flex-direction: column;
+}
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+}
+.service-card img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.service-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.service-body h3 {
+  margin: 0 0 10px;
+  color: var(--navy);
+  font-size: 1.2rem;
+}
+.service-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .95rem;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+.service-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--gold-dark);
+  font-weight: 800;
+  font-size: .92rem;
+  transition: transform .18s ease;
+}
+.service-link:hover {
+  transform: translateX(4px);
+}
+
+/* ── SECCIÓN "¿POR QUÉ ELEGIRNOS?" (SPLIT) ──────────────────── */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+}
+.split-image {
+  min-height: 430px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+}
+.split-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── LISTA CON TILDES ───────────────────────────────────────── */
+.check-list {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 30px;
+}
+.check-list li {
+  display: flex;
+  gap: 12px;
+  margin: 14px 0;
+  color: #435159;
+  align-items: center;
+  font-size: 1rem;
+}
+.check-list li::before {
+  content: "✓";
+  flex: 0 0 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--green);
+  font-size: .8rem;
+  font-weight: 900;
+}
+
+/* ── RESPONSIVE ESPECÍFICO DE SERVICIOS ─────────────────────── */
+@media (max-width: 900px) {
+  .services-grid-full { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .split { gap: 35px; }
+}
+
+@media (max-width: 650px) {
+  .services-grid-full { grid-template-columns: 1fr; gap: 16px; }
+  .service-card img { height: 160px; }
+  .service-body { padding: 18px; }
+  .service-body h3 { font-size: 1.05rem; }
+  .service-body p { font-size: .88rem; }
+  .split { grid-template-columns: 1fr; }
+  .split-image { min-height: 260px; order: 2; }
+}
+
