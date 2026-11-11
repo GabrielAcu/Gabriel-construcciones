@@ -4,7 +4,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Configuración de enlaces dinámicos de WhatsApp y año automático
-  const WHATSAPP_NUMBER = "5491136083260";
+  const WHATSAPP_NUMBER = "5491136080260";
   const defaultMsg = "Hola Gabriel, vi su página web y quisiera consultar por un presupuesto. ¿Podemos hablar?";
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(defaultMsg)}`;
 
@@ -19,6 +19,51 @@ document.addEventListener("DOMContentLoaded", () => {
   const yearEl = document.getElementById("year");
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
+  }
+
+  // 1.b Menú Hamburguesa para vista en celulares
+  const navToggle = document.getElementById("navToggle");
+  const navLinks = document.getElementById("navLinks");
+
+  if (navToggle && navLinks) {
+    // Crear dinámicamente el backdrop/overlay si no existe
+    let navOverlay = document.querySelector(".nav-overlay");
+    if (!navOverlay) {
+      navOverlay = document.createElement("div");
+      navOverlay.className = "nav-overlay";
+      document.body.appendChild(navOverlay);
+    }
+
+    function toggleMenu() {
+      const isOpen = navLinks.classList.toggle("is-open");
+      navToggle.classList.toggle("is-active", isOpen);
+      navOverlay.classList.toggle("is-active", isOpen);
+      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      document.body.style.overflow = isOpen ? "hidden" : "";
+    }
+
+    function closeMenu() {
+      navLinks.classList.remove("is-open");
+      navToggle.classList.remove("is-active");
+      navOverlay.classList.remove("is-active");
+      navToggle.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    }
+
+    navToggle.addEventListener("click", toggleMenu);
+    navOverlay.addEventListener("click", closeMenu);
+
+    // Cerrar al hacer clic en cualquier enlace
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    // Cerrar con Escape
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && navLinks.classList.contains("is-open")) {
+        closeMenu();
+      }
+    });
   }
 
   // 2. Animación de Scroll con IntersectionObserver (Fade In Up / Stagger)
