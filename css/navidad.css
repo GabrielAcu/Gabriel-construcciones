@@ -338,7 +338,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
@@ -350,139 +350,188 @@
 .xmas-promo-dialog {
   position: relative;
   width: 100%;
-  max-width: 540px;
+  max-width: 520px;
+  max-height: min(88vh, 88dvh);
   background: linear-gradient(165deg, #1a3542 0%, #10232c 100%);
   color: #fff;
   border: 2px solid #d8aa63;
   border-radius: 22px;
-  padding: 32px 28px 26px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-  transform: scale(0.92) translateY(14px);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  transform: scale(0.94) translateY(12px);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
 }
 .xmas-promo-modal.is-open .xmas-promo-dialog {
   transform: scale(1) translateY(0);
 }
-.xmas-promo-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+
+/* Barra superior fija: selector de los 3 regalos + botón X */
+.xmas-promo-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(10, 23, 29, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+.xmas-promo-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.xmas-switch-btn {
+  flex: 1;
   background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 8px 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+}
+.xmas-switch-btn.is-active {
+  background: linear-gradient(90deg, #d8aa63, #b58438);
+  border-color: #ffe6a3;
+  color: #10232c;
+  box-shadow: 0 4px 12px rgba(216, 170, 99, 0.35);
+}
+.xmas-switch-btn:hover:not(.is-active) {
+  background: rgba(216, 170, 99, 0.2);
+  border-color: #ffd97d;
+  color: #ffd97d;
+}
+.xmas-promo-close {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(225, 29, 56, 0.85);
   color: #fff;
-  font-size: 1.6rem;
+  font-size: 1.45rem;
+  font-weight: 700;
   line-height: 1;
+  display: grid;
+  place-items: center;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
 }
 .xmas-promo-close:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #e11d38;
   transform: scale(1.08);
 }
-.xmas-promo-confetti {
-  font-size: 1.35rem;
-  letter-spacing: 0.2em;
-  margin-bottom: 6px;
+
+/* Cuerpo central desplazable si la pantalla es baja */
+.xmas-promo-body {
+  padding: 18px 22px 14px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
 }
 .xmas-promo-tag {
-  display: inline-block;
-  font-size: 0.74rem;
+  display: block;
+  font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #ffd97d;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .xmas-promo-discount {
   display: inline-block;
   background: linear-gradient(90deg, #e11d38, #b80d24);
   color: #fff;
   font-weight: 900;
-  font-size: 1.05rem;
-  padding: 7px 18px;
+  font-size: 0.98rem;
+  padding: 6px 16px;
   border-radius: 999px;
   border: 1.5px solid #ffd97d;
-  box-shadow: 0 8px 20px rgba(225, 29, 56, 0.4);
-  margin-bottom: 14px;
+  box-shadow: 0 6px 18px rgba(225, 29, 56, 0.4);
+  margin-bottom: 12px;
 }
 .xmas-promo-title {
   color: #fff;
-  font-size: 1.5rem;
-  line-height: 1.2;
-  margin: 0 0 12px;
+  font-size: 1.35rem;
+  line-height: 1.22;
+  margin: 0 0 10px;
 }
 .xmas-promo-desc {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.96rem;
-  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  margin: 0 0 14px;
 }
 .xmas-promo-perks {
   text-align: left;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 14px 18px;
-  margin: 0 0 16px;
+  border-radius: 12px;
+  padding: 11px 14px;
+  margin: 0 0 12px;
   display: grid;
-  gap: 8px;
-  font-size: 0.92rem;
+  gap: 6px;
+  font-size: 0.86rem;
   font-weight: 700;
   color: #eaf6ef;
 }
 .xmas-promo-urgency {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   text-align: left;
   background: rgba(225, 29, 56, 0.16);
   border: 1px solid rgba(255, 120, 138, 0.4);
-  border-radius: 11px;
-  padding: 10px 14px;
-  font-size: 0.84rem;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 0.8rem;
   color: #ffd7de;
-  margin-bottom: 18px;
+}
+
+/* Pie fijo: botón de WhatsApp + botón claro de Volver / Cerrar */
+.xmas-promo-footer {
+  padding: 12px 22px 16px;
+  background: rgba(10, 23, 29, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  gap: 8px;
+  flex-shrink: 0;
 }
 .xmas-promo-cta {
   width: 100%;
-  min-height: 52px;
-  font-size: 1rem;
+  min-height: 46px;
+  font-size: 0.95rem;
   background: #25d366;
   color: #0b2416;
-  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.35);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.32);
 }
 .xmas-promo-cta:hover {
   background: #2be571;
   color: #0b2416;
 }
-.xmas-promo-switcher {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-.xmas-switch-btn {
+.xmas-promo-back {
+  width: 100%;
+  min-height: 38px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 0.76rem;
+  color: #fff;
+  font-size: 0.84rem;
   font-weight: 700;
-  padding: 6px 11px;
-  border-radius: 999px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition: background 0.2s;
 }
-.xmas-switch-btn.is-active,
-.xmas-switch-btn:hover {
-  background: rgba(216, 170, 99, 0.25);
-  border-color: #ffd97d;
-  color: #ffd97d;
+.xmas-promo-back:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 
 /* ── BOTÓN FLOTANTE DE REGALO NAVIDEÑO (esquina inferior izq) ─ */
@@ -625,7 +674,19 @@
   .xmas-gift-btn { padding: 15px 5px 10px; }
   .xmas-gift-label { font-size: 0.82rem; }
   .xmas-gift-sublabel { font-size: 0.68rem; }
-  .xmas-promo-dialog { padding: 26px 18px 20px; }
+  .xmas-promo-modal { padding: 10px; }
+  .xmas-promo-dialog { max-height: min(90vh, 90dvh); border-radius: 18px; }
+  .xmas-promo-topbar { padding: 10px 10px; gap: 6px; }
+  .xmas-switch-btn { font-size: 0.74rem; padding: 7px 4px; }
+  .xmas-promo-body { padding: 14px 15px 10px; }
+  .xmas-promo-discount { font-size: 0.88rem; padding: 5px 13px; margin-bottom: 8px; }
+  .xmas-promo-title { font-size: 1.12rem; margin-bottom: 8px; }
+  .xmas-promo-desc { font-size: 0.84rem; margin-bottom: 10px; }
+  .xmas-promo-perks { padding: 9px 12px; font-size: 0.8rem; gap: 4px; margin-bottom: 10px; }
+  .xmas-promo-urgency { padding: 7px 10px; font-size: 0.76rem; }
+  .xmas-promo-footer { padding: 10px 15px 12px; gap: 6px; }
+  .xmas-promo-cta { min-height: 44px; font-size: 0.88rem; }
+  .xmas-promo-back { min-height: 36px; font-size: 0.8rem; }
   .xmas-floating-gift {
     left: 14px;
     bottom: 15px;

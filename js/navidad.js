@@ -592,23 +592,29 @@
     modal.setAttribute("aria-modal", "true");
     modal.innerHTML = `
       <div class="xmas-promo-dialog">
-        <button class="xmas-promo-close" id="xmasPromoClose" aria-label="Cerrar regalo">&times;</button>
-        <div class="xmas-promo-confetti" aria-hidden="true">🎄 ✨ 🎁 ✨ 🎄</div>
-        <span class="xmas-promo-tag" id="xmasPromoTag"></span>
-        <div class="xmas-promo-discount" id="xmasPromoBadge"></div>
-        <h3 class="xmas-promo-title" id="xmasPromoTitle"></h3>
-        <p class="xmas-promo-desc" id="xmasPromoDesc"></p>
-        <ul class="xmas-promo-perks">
-          <li id="xmasPromoPerk1"></li>
-          <li id="xmasPromoPerk2"></li>
-          <li id="xmasPromoPerk3"></li>
-        </ul>
-        <div class="xmas-promo-urgency">
-          <span class="xmas-urgency-dot"></span>
-          <span><strong>Cupos limitados:</strong> solo quedan <strong>3 lugares disponibles</strong> en agenda para arrancar obra antes de diciembre.</span>
+        <div class="xmas-promo-topbar">
+          <div class="xmas-promo-switcher" id="xmasPromoSwitcher" aria-label="Elegir otro regalo"></div>
+          <button type="button" class="xmas-promo-close" id="xmasPromoClose" aria-label="Cerrar regalo">&times;</button>
         </div>
-        <a class="btn xmas-promo-cta" id="xmasPromoCta" href="#" target="_blank" rel="noopener noreferrer"></a>
-        <div class="xmas-promo-switcher" id="xmasPromoSwitcher"></div>
+        <div class="xmas-promo-body">
+          <span class="xmas-promo-tag" id="xmasPromoTag"></span>
+          <div class="xmas-promo-discount" id="xmasPromoBadge"></div>
+          <h3 class="xmas-promo-title" id="xmasPromoTitle"></h3>
+          <p class="xmas-promo-desc" id="xmasPromoDesc"></p>
+          <ul class="xmas-promo-perks">
+            <li id="xmasPromoPerk1"></li>
+            <li id="xmasPromoPerk2"></li>
+            <li id="xmasPromoPerk3"></li>
+          </ul>
+          <div class="xmas-promo-urgency">
+            <span class="xmas-urgency-dot"></span>
+            <span><strong>Cupos limitados:</strong> quedan <strong>3 lugares disponibles</strong> antes de diciembre.</span>
+          </div>
+        </div>
+        <div class="xmas-promo-footer">
+          <a class="btn xmas-promo-cta" id="xmasPromoCta" href="#" target="_blank" rel="noopener noreferrer"></a>
+          <button type="button" class="xmas-promo-back" id="xmasPromoBack">← Volver al arbolito / Cerrar</button>
+        </div>
       </div>
     `;
     document.body.appendChild(modal);
@@ -619,12 +625,13 @@
       btn.type = "button";
       btn.className = "xmas-switch-btn";
       btn.dataset.idx = idx;
-      btn.innerHTML = `🎁 ${g.label}: ${g.hint}`;
+      btn.innerHTML = `🎁 ${g.label}`;
       btn.addEventListener("click", () => openGiftModal(idx));
       switcher.appendChild(btn);
     });
 
     modal.querySelector("#xmasPromoClose").addEventListener("click", closeGiftModal);
+    modal.querySelector("#xmasPromoBack").addEventListener("click", closeGiftModal);
     modal.addEventListener("click", (e) => {
       if (e.target === modal) closeGiftModal();
     });
