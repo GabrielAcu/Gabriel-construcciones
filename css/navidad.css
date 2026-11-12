@@ -1,0 +1,128 @@
+/* ============================================================
+   Gabriel Construcciones – Decoración navideña
+   navidad.css  |  Estilos de los adornos generados por js/navidad.js
+   Para quitar la decoración: borrar el <link> a este archivo y el
+   <script> a js/navidad.js en cada página.
+   ============================================================ */
+
+.xmas-deco {
+  pointer-events: none;
+  line-height: 0;
+}
+.xmas-deco svg {
+  display: block;
+  overflow: visible;
+}
+
+/* ── Guirnalda bajo el menú (acompaña al header fijo) ───────── */
+.xmas-garland {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 8px);
+  z-index: 1;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .28));
+}
+
+/* ── Adornos colgantes del hero ─────────────────────────────── */
+.xmas-on .hero {
+  position: relative;
+  overflow: hidden;
+}
+.xmas-on .hero > .container {
+  position: relative;
+  z-index: 2;
+}
+.xmas-on .page-hero {
+  overflow: hidden;
+}
+.xmas-hangers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.xmas-hang {
+  position: absolute;
+  top: 0;
+  transform-origin: 50% 0;
+  animation: xmasSwing var(--d, 3.5s) ease-in-out var(--del, 0s) infinite alternate;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, .38));
+  will-change: transform;
+}
+
+/* ── Guirnalda sobre la franja CTA ──────────────────────────── */
+.xmas-on .cta-band {
+  position: relative;
+  padding-top: 112px;
+  overflow: hidden;
+}
+.xmas-garland-cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .35));
+}
+.xmas-on .cta-band .cta-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Tira de luces del footer ───────────────────────────────── */
+.xmas-on footer {
+  position: relative;
+  padding-top: 52px;
+}
+.xmas-lights-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+/* ── Nevada ─────────────────────────────────────────────────── */
+.xmas-snow {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 38;
+  pointer-events: none;
+}
+
+/* ── Animaciones ────────────────────────────────────────────── */
+.xmas-deco .xl {
+  animation: xmasTwinkle 2s ease-in-out infinite;
+}
+.xmas-deco .xs {
+  transform-box: view-box;
+  animation: xmasSwingSm 3s ease-in-out infinite alternate;
+}
+
+@keyframes xmasTwinkle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .3; }
+}
+@keyframes xmasSwing {
+  from { transform: rotate(calc(var(--amp, 4deg) * -1)); }
+  to   { transform: rotate(var(--amp, 4deg)); }
+}
+@keyframes xmasSwingSm {
+  from { transform: rotate(-7deg); }
+  to   { transform: rotate(7deg); }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 650px) {
+  .xmas-on .cta-band { padding-top: 92px; }
+  .xmas-on footer { padding-top: 44px; }
+}
+
+/* ── Accesibilidad: sin movimiento si el usuario lo prefiere ── */
+@media (prefers-reduced-motion: reduce) {
+  .xmas-deco .xl,
+  .xmas-deco .xs,
+  .xmas-hang { animation: none !important; }
+}
+
