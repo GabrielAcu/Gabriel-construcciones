@@ -250,4 +250,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "ArrowLeft") prevImage();
     });
   }
+
+  // 6. Deslizador interactivo Antes / Después (trabajos.html)
+  document.querySelectorAll("[data-ba-slider]").forEach((slider) => {
+    const range = slider.querySelector(".ba-range");
+    if (!range) return;
+    const updatePos = () => {
+      slider.style.setProperty("--pos", `${range.value}%`);
+    };
+    range.addEventListener("input", updatePos);
+    range.addEventListener("change", updatePos);
+  });
 });

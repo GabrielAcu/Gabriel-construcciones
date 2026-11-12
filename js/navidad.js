@@ -1,19 +1,24 @@
 /**
- * Gabriel Construcciones – Decoración navideña (navidad.js)
- * ------------------------------------------------------------
+ * Gabriel Construcciones – Decoración navideña + Arbolito & Regalos (navidad.js)
+ * -----------------------------------------------------------------------------
  * Genera con SVG (sin imágenes externas):
  *   · Guirnalda de pino con luces titilantes, moños y bolas bajo el menú.
  *   · Bolas, estrella y adornos colgantes que se balancean en el hero.
+ *   · Arbolito de Navidad ilustrado en SVG con luces, guirnaldas, esferas y
+ *     estrella brillante + 3 regalos interactivos al pie del árbol que al
+ *     tocarlos revelan promociones ("Presupuesto sin cargo + 10% OFF antes de
+ *     diciembre") y abren WhatsApp con mensaje prearmado + aviso de cupos.
+ *   · Widget flotante del arbolito en páginas internas para abrir los regalos.
  *   · Guirnalda sobre la franja de contacto (CTA) y tira de luces en el footer.
  *   · Nevada suave.
  *
  * Se activa sola del 1/11 al 10/01. Forzar desde la URL:
  *   ?navidad=on   → siempre activa      ?navidad=off  → desactivada
- * Para quitarla definitivamente: borrar el <link> a css/navidad.css
- * y el <script> a js/navidad.js de cada página.
  */
 (() => {
   "use strict";
+
+  const WHATSAPP_NUMBER = "5491136080260";
 
   /* ── ¿Está activa? ─────────────────────────────────────────── */
   const param = new URLSearchParams(location.search).get("navidad");
@@ -60,6 +65,7 @@
     s += `<radialGradient id="${p}-shade" cx=".42" cy=".38" r=".62"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></radialGradient>`;
     s += `<linearGradient id="${p}-bow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5466"/><stop offset=".5" stop-color="#d0142c"/><stop offset="1" stop-color="#7d0614"/></linearGradient>`;
     s += `<radialGradient id="${p}-star" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fffbe6"/><stop offset=".45" stop-color="#f3c950"/><stop offset="1" stop-color="#8d600c"/></radialGradient>`;
+    s += `<radialGradient id="${p}-starglow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe88a" stop-opacity=".9"/><stop offset=".45" stop-color="#f3c950" stop-opacity=".35"/><stop offset="1" stop-color="#f3c950" stop-opacity="0"/></radialGradient>`;
     return s + "</defs>";
   }
 
@@ -212,7 +218,6 @@
             if (r < 0.38) dark += seg; else if (r < 0.78) mid += seg; else if (r < 0.95) light += seg; else frost += seg;
           }
         }
-        // Racimos de frutos rojos (acebo)
         for (let b = 0; b < 3; b++) {
           const [x, y] = pt(0.12 + rnd() * 0.76);
           for (let q = 0; q < 3; q++) {
@@ -222,7 +227,6 @@
         }
       }
 
-      // Luces
       const mL = Math.max(3, Math.round(sw / ((pine ? 36 : 30) * s)));
       for (let k = 0; k < mL; k++) {
         const t = (k + 0.5) / mL, [x, y] = pt(t), a = tan(t);
@@ -236,7 +240,6 @@
           `<ellipse cx="${f(-1.2 * s)}" cy="${f(8 * s)}" rx="${f(s)}" ry="${f(2.2 * s)}" fill="#fff" opacity=".75"/></g></g>`;
       }
 
-      // Bolas colgando del punto más bajo (y extras a los costados)
       if (balls) {
         const hangs = [[0.5, i % 2 ? 26 : 12, i % 3 === 0 ? 13.5 : 11.5]];
         if (extras && sw > 190) hangs.push([0.2, 6, 8.5], [0.8, 8, 8.5]);
@@ -297,6 +300,425 @@
     const h = Math.ceil(orn.h);
     const style = `left:${o.left}%;margin-left:${-w / 2}px;--d:${f(2.8 + rnd() * 2)}s;--del:${f(-rnd() * 4)}s;--amp:${f(2.5 + rnd() * 2.5)}deg`;
     return `<div class="xmas-hang" style="${style}"><svg width="${w}" height="${h}" viewBox="${f(-w / 2)} 0 ${w} ${h}" aria-hidden="true" focusable="false">${defs(p)}${orn.svg}</svg></div>`;
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     ARBOLITO DE NAVIDAD EN SVG + REGALOS INTERACTIVOS
+     ══════════════════════════════════════════════════════════════ */
+  const GIFTS_DATA = [
+    {
+      id: "regalo-1",
+      tag: "REGALO #1 · OBRA Y ALBAÑILERÍA",
+      badge: "🎁 Presupuesto sin cargo + 10% OFF",
+      title: "10% de descuento + Presupuesto sin cargo en tu obra",
+      desc: "Contratando tu obra de construcción, ampliación, losa o colocación de cerámicos antes del 30 de noviembre, congelamos mano de obra y te bonificamos un 10%.",
+      perk1: "✓ Visita técnica y presupuesto escrito 100% sin cargo",
+      perk2: "✓ 10% OFF reservando fecha antes de diciembre",
+      perk3: "✓ Un único responsable coordinando todos los gremios",
+      cta: "Reclamar mi 10% OFF por WhatsApp →",
+      waMsg: "Hola Gabriel! 🎄 Abrí el Regalo #1 del arbolito en la web y quiero aprovechar el Presupuesto sin cargo + 10% de descuento antes de diciembre para una obra de albañilería/ampliación.",
+      boxColor: ["#ff5969", "#cf122a", "#740615"],
+      ribbonColor: ["#fff3b8", "#e0a932", "#885b08"],
+      label: "Regalo 1",
+      hint: "Obra y Albañilería",
+    },
+    {
+      id: "regalo-2",
+      tag: "REGALO #2 · COCINAS, BAÑOS Y REMODELACIÓN",
+      badge: "🎁 Presupuesto sin cargo + 10% OFF",
+      title: "Renová tu casa para las Fiestas con 10% OFF",
+      desc: "Remodelación de cocinas, baños, pintura e interiores para recibir Navidad y Año Nuevo con tu casa impecable. Presupuesto sin cargo y 10% de descuento confirmando antes de diciembre.",
+      perk1: "✓ Presupuesto detallado en menos de 24 hs sin cargo",
+      perk2: "✓ 10% OFF en mano de obra antes del 1 de diciembre",
+      perk3: "✓ Plomero, electricista, albañil y pintor coordinados",
+      cta: "Quiero renovar con 10% OFF →",
+      waMsg: "Hola Gabriel! 🎄 Abrí el Regalo #2 en la página web y quiero consultar por el Presupuesto sin cargo + 10% de descuento antes de diciembre para una remodelación.",
+      boxColor: ["#ffe89c", "#d69b27", "#744c05"],
+      ribbonColor: ["#ff5969", "#c8102e", "#6d0514"],
+      label: "Regalo 2",
+      hint: "Cocina, Baño y Pintura",
+    },
+    {
+      id: "regalo-3",
+      tag: "REGALO #3 · TECHOS, PLOMERÍA Y ELECTRICIDAD",
+      badge: "🎁 Presupuesto sin cargo + 10% OFF",
+      title: "Techos, Filtraciones e Instalaciones con 10% OFF",
+      desc: "Impermeabilización de techos y losas, recambio de cañerías en termofusión o tableros eléctricos antes de las lluvias de verano. Diagnóstico sin cargo + 10% OFF.",
+      perk1: "✓ Revisión y presupuesto sin cargo en CABA y GBA",
+      perk2: "✓ 10% de descuento contratando antes de diciembre",
+      perk3: "✓ Trabajo garantizado y materiales de primera línea",
+      cta: "Pedir revisión sin cargo + 10% OFF →",
+      waMsg: "Hola Gabriel! 🎄 Abrí el Regalo #3 del arbolito en la web y quiero pedir el Presupuesto sin cargo + 10% de descuento antes de diciembre para techos/plomería/electricidad.",
+      boxColor: ["#62dba0", "#13824c", "#053b1f"],
+      ribbonColor: ["#fff3b8", "#e0a932", "#885b08"],
+      label: "Regalo 3",
+      hint: "Techos e Instalaciones",
+    },
+  ];
+
+  function buildChristmasTreeSVG() {
+    const p = "xtree" + ++uid;
+    const rnd = mulberry32(77);
+    const W = 400, H = 470, cx = 200;
+
+    // 5 capas de pino de arriba hacia abajo
+    const tiers = [
+      { topY: 64,  botY: 146, topW: 12,  botW: 84  },
+      { topY: 118, botY: 212, topW: 36,  botW: 124 },
+      { topY: 176, botY: 282, topW: 54,  botW: 162 },
+      { topY: 240, botY: 352, topW: 72,  botW: 198 },
+      { topY: 304, botY: 410, topW: 92,  botW: 230 },
+    ];
+
+    let layersSvg = "";
+    let darkNeedles = "", midNeedles = "", lightNeedles = "", snowTips = "";
+
+    tiers.forEach((tier, idx) => {
+      const { topY, botY, topW, botW } = tier;
+      const h = botY - topY;
+      // Puntas festoneadas en la base de cada capa
+      const scallops = 7 + idx * 2;
+      let d = `M ${f(cx - topW / 2)},${f(topY)} `;
+      d += `Q ${f(cx - topW * 0.65)},${f(topY + h * 0.55)} ${f(cx - botW / 2)},${f(botY - 8)} `;
+
+      const stepW = botW / scallops;
+      for (let s = 0; s < scallops; s++) {
+        const sx0 = cx - botW / 2 + s * stepW;
+        const sx1 = sx0 + stepW;
+        const smid = (sx0 + sx1) / 2;
+        const dip = botY + 12 + (s % 2 === 0 ? 5 : 0);
+        d += `Q ${f(smid)},${f(dip)} ${f(sx1)},${f(botY - 8)} `;
+      }
+      d += `Q ${f(cx + topW * 0.65)},${f(topY + h * 0.55)} ${f(cx + topW / 2)},${f(topY)} Z`;
+
+      layersSvg += `<path d="${d}" fill="url(#${p}-tier-${idx % 2})" stroke="#0d2c19" stroke-width="1.5" filter="url(#${p}-drop)"/>`;
+
+      // Agujas de pino texturizadas dentro de cada capa
+      const needleCount = 65 + idx * 22;
+      for (let n = 0; n < needleCount; n++) {
+        const t = Math.pow(rnd(), 0.85);
+        const y = topY + 8 + t * (h - 12);
+        const halfW = (topW / 2) + t * ((botW - topW) / 2) * 0.92;
+        const x = cx + (rnd() * 2 - 1) * halfW;
+        const dir = x < cx ? -1 : 1;
+        const ang = Math.PI / 2 + dir * (0.25 + rnd() * 0.65);
+        const len = 9 + rnd() * 11;
+        const seg = `M${f(x)},${f(y)}l${f(Math.cos(ang) * len)},${f(Math.sin(ang) * len)}`;
+        const pick = rnd();
+        if (pick < 0.36) darkNeedles += seg;
+        else if (pick < 0.78) midNeedles += seg;
+        else if (pick < 0.94) lightNeedles += seg;
+        else snowTips += seg;
+      }
+    });
+
+    // Guirnaldas doradas / perlas que cruzan el árbol
+    constgarlandPaths: {
+      /* defined below */
+    }
+    const swagRows = [
+      { y0: 132, y1: 145, w0: 56,  w1: 72 },
+      { y0: 192, y1: 210, w0: 88,  w1: 112 },
+      { y0: 258, y1: 280, w0: 122, w1: 148 },
+      { y0: 326, y1: 352, w0: 156, w1: 186 },
+      { y0: 382, y1: 398, w0: 190, w1: 204 },
+    ];
+    let tinselSvg = "", pearlsSvg = "", treeLightsSvg = "";
+    swagRows.forEach((row, rIdx) => {
+      const xL = cx - row.w0 / 2;
+      const xR = cx + row.w1 / 2;
+      const cY = (row.y0 + row.y1) / 2 + 24;
+      tinselSvg += `<path d="M${f(xL)},${f(row.y0)} Q${f(cx)},${f(cY)} ${f(xR)},${f(row.y1)}" fill="none" stroke="url(#${p}-cap)" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>`;
+
+      const count = 7 + rIdx * 2;
+      for (let i = 0; i <= count; i++) {
+        const t = i / count;
+        const px = (1 - t) ** 2 * xL + 2 * (1 - t) * t * cx + t * t * xR;
+        const py = (1 - t) ** 2 * row.y0 + 2 * (1 - t) * t * cY + t * t * row.y1;
+        pearlsSvg += `<circle cx="${f(px)}" cy="${f(py)}" r="2.6" fill="#fff6cf" stroke="#a87532" stroke-width=".6"/>`;
+
+        if (i < count) {
+          const lt = (i + 0.5) / count;
+          const lx = (1 - lt) ** 2 * xL + 2 * (1 - lt) * lt * cx + lt * lt * xR;
+          const ly = (1 - lt) ** 2 * row.y0 + 2 * (1 - lt) * lt * cY + lt * lt * row.y1 - 4;
+          const ci = (rIdx * 5 + i) % LIGHTS.length;
+          treeLightsSvg += `<g class="xl" style="animation-delay:${f(-rnd() * 3)}s;animation-duration:${f(1.2 + rnd() * 1.6)}s">` +
+            `<circle cx="${f(lx)}" cy="${f(ly)}" r="12" fill="url(#${p}-g${ci})"/>` +
+            `<circle cx="${f(lx)}" cy="${f(ly)}" r="3.4" fill="${LIGHTS[ci]}"/>` +
+            `<circle cx="${f(lx - 1)}" cy="${f(ly - 1)}" r="1.2" fill="#fff" opacity=".85"/>` +
+            `</g>`;
+        }
+      }
+    });
+
+    // Esferas del arbolito (grandes y vistosas)
+    const treeOrnaments = [
+      { x: 182, y: 112, r: 10, color: "red",    deco: "band" },
+      { x: 222, y: 128, r: 9.5, color: "gold",  deco: "glitter" },
+      { x: 158, y: 168, r: 12, color: "gold",   deco: "snow" },
+      { x: 204, y: 176, r: 11, color: "red",    deco: "zigzag" },
+      { x: 244, y: 184, r: 11.5, color: "silver", deco: "lines" },
+      { x: 138, y: 232, r: 13, color: "wine",   deco: "band" },
+      { x: 182, y: 244, r: 12.5, color: "blue", deco: "snow" },
+      { x: 226, y: 238, r: 13.5, color: "red",  deco: "glitter" },
+      { x: 266, y: 252, r: 11.5, color: "gold", deco: "band" },
+      { x: 118, y: 306, r: 14, color: "red",    deco: "snow" },
+      { x: 162, y: 318, r: 13, color: "gold",   deco: "lines" },
+      { x: 206, y: 308, r: 14.5, color: "silver", deco: "band" },
+      { x: 248, y: 322, r: 13, color: "wine",   deco: "glitter" },
+      { x: 286, y: 310, r: 12.5, color: "green", deco: "zigzag" },
+      { x: 104, y: 376, r: 14.5, color: "gold", deco: "band" },
+      { x: 148, y: 388, r: 15, color: "red",    deco: "glitter" },
+      { x: 198, y: 382, r: 14, color: "blue",   deco: "snow" },
+      { x: 244, y: 392, r: 15, color: "gold",   deco: "zigzag" },
+      { x: 294, y: 380, r: 14, color: "red",    deco: "band" },
+    ];
+
+    let ballsSvg = "";
+    treeOrnaments.forEach((b) => {
+      const orn = ornament(p, { r: b.r, len: 5, color: b.color, deco: b.deco, tw: 1 }, rnd);
+      const topY = b.y - b.r - 8;
+      ballsSvg += `<g class="xs" style="transform-origin:${f(b.x)}px ${f(topY)}px;animation-delay:${f(-rnd() * 4)}s;animation-duration:${f(2.6 + rnd() * 1.6)}s">` +
+        `<g transform="translate(${f(b.x)},${f(topY)})">${orn.svg}</g></g>`;
+    });
+
+    // Moños rojos decorativos en el árbol
+    const treeBows = [
+      [172, 146, 0.72], [230, 152, 0.72],
+      [148, 206, 0.8],  [252, 214, 0.8],
+      [128, 276, 0.86], [202, 272, 0.85], [274, 282, 0.86],
+      [122, 350, 0.92], [278, 354, 0.92],
+    ];
+    let bowsSvg = "";
+    treeBows.forEach(([bx, by, bs]) => {
+      bowsSvg += bow(p, bx, by, bs);
+    });
+
+    // Estrella superior grande con halo brillante
+    const starY = 48, starR = 30;
+    const sPts = [], sInPts = [];
+    for (let i = 0; i < 10; i++) {
+      const a = -Math.PI / 2 + (i * Math.PI) / 5;
+      const rr = i % 2 ? starR * 0.42 : starR;
+      sPts.push(f(cx + Math.cos(a) * rr) + "," + f(starY + Math.sin(a) * rr));
+      sInPts.push(f(cx + Math.cos(a) * rr * 0.55) + "," + f(starY + Math.sin(a) * rr * 0.55));
+    }
+    const starSvg = `<g class="xmas-tree-star">` +
+      `<circle cx="${cx}" cy="${starY}" r="52" fill="url(#${p}-starglow)" class="xl"/>` +
+      `<polygon points="${sPts.join(" ")}" fill="url(#${p}-star)" stroke="#b8821e" stroke-width="1.4" stroke-linejoin="round"/>` +
+      `<polygon points="${sInPts.join(" ")}" fill="#fffbe6" opacity=".55"/>` +
+      `<circle cx="${cx}" cy="${starY}" r="4.5" fill="#ffffff"/>` +
+      `</g>`;
+
+    const customDefs = defs(p).replace(
+      "</defs>",
+      `<linearGradient id="${p}-tier-0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8548"/><stop offset=".55" stop-color="#1c5c30"/><stop offset="1" stop-color="#0f381c"/></linearGradient>` +
+      `<linearGradient id="${p}-tier-1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#27733e"/><stop offset=".55" stop-color="#174f28"/><stop offset="1" stop-color="#0c2f17"/></linearGradient>` +
+      `<linearGradient id="${p}-trunk" x1="0" x2="1"><stop offset="0" stop-color="#3b2210"/><stop offset=".45" stop-color="#6e4121"/><stop offset="1" stop-color="#2d180a"/></linearGradient>` +
+      `<radialGradient id="${p}-snowbase" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".7" stop-color="#dfece5" stop-opacity=".75"/><stop offset="1" stop-color="#dfece5" stop-opacity="0"/></radialGradient>` +
+      `<filter id="${p}-drop" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="#000" flood-opacity=".38"/></filter>` +
+      `</defs>`
+    );
+
+    const trunkAndBase =
+      `<ellipse cx="${cx}" cy="442" rx="165" ry="20" fill="url(#${p}-snowbase)"/>` +
+      `<rect x="${cx - 22}" y="395" width="44" height="46" rx="6" fill="url(#${p}-trunk)" stroke="#241206" stroke-width="1.5"/>` +
+      `<path d="M${cx - 48},432 L${cx + 48},432 L${cx + 38},452 L${cx - 38},452 Z" fill="#8c1424" stroke="#d8aa63" stroke-width="2"/>`;
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" class="xmas-tree-svg" aria-hidden="true" focusable="false">` +
+      customDefs +
+      trunkAndBase +
+      layersSvg +
+      `<path d="${darkNeedles}" stroke="#11381e" stroke-width="2.2" stroke-linecap="round" fill="none"/>` +
+      `<path d="${midNeedles}" stroke="#2d7c45" stroke-width="2" stroke-linecap="round" fill="none"/>` +
+      `<path d="${lightNeedles}" stroke="#54b267" stroke-width="1.7" stroke-linecap="round" fill="none"/>` +
+      `<path d="${snowTips}" stroke="#eef8f1" stroke-width="1.9" stroke-linecap="round" fill="none" opacity=".92"/>` +
+      tinselSvg +
+      pearlsSvg +
+      bowsSvg +
+      ballsSvg +
+      treeLightsSvg +
+      starSvg +
+      `</svg>`;
+  }
+
+  /* ── SVG de cada caja de regalo interactiva ────────────────── */
+  function buildGiftBoxSVG(g, idx) {
+    const p = `xgift${idx}_${++uid}`;
+    const [bL, bM, bD] = g.boxColor;
+    const [rL, rM, rD] = g.ribbonColor;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 135" class="xmas-gift-svg" aria-hidden="true">` +
+      `<defs>` +
+      `<linearGradient id="${p}-box" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bL}"/><stop offset=".5" stop-color="${bM}"/><stop offset="1" stop-color="${bD}"/></linearGradient>` +
+      `<linearGradient id="${p}-rib" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${rD}"/><stop offset=".35" stop-color="${rL}"/><stop offset=".65" stop-color="${rM}"/><stop offset="1" stop-color="${rD}"/></linearGradient>` +
+      `</defs>` +
+      // Sombra de piso
+      `<ellipse cx="65" cy="126" rx="48" ry="6" fill="rgba(0,0,0,.35)"/>` +
+      // Destello mágico al abrir
+      `<circle cx="65" cy="68" r="46" fill="${rL}" opacity="0" class="xmas-gift-burst"/>` +
+      // Cuerpo de la caja
+      `<g class="xmas-gift-body">` +
+      `<rect x="20" y="54" width="90" height="70" rx="6" fill="url(#${p}-box)" stroke="${bD}" stroke-width="1.5"/>` +
+      `<rect x="20" y="54" width="90" height="10" fill="#000" opacity=".18"/>` +
+      // Cinta vertical
+      `<rect x="57" y="54" width="16" height="70" fill="url(#${p}-rib)"/>` +
+      // Cinta horizontal
+      `<rect x="20" y="82" width="90" height="13" fill="url(#${p}-rib)"/>` +
+      // Brillo lateral
+      `<rect x="25" y="60" width="6" height="58" rx="3" fill="#fff" opacity=".22"/>` +
+      `</g>` +
+      // Tapa + moño (se levanta al hacer hover/abrir)
+      `<g class="xmas-gift-lid">` +
+      // Moño superior
+      `<path d="M65,38 C48,18 26,22 30,36 C33,46 52,44 65,38 Z" fill="url(#${p}-rib)" stroke="${rD}" stroke-width="1"/>` +
+      `<path d="M65,38 C82,18 104,22 100,36 C97,46 78,44 65,38 Z" fill="url(#${p}-rib)" stroke="${rD}" stroke-width="1"/>` +
+      `<ellipse cx="65" cy="37" rx="7" ry="6" fill="${rM}" stroke="${rL}" stroke-width="1"/>` +
+      // Tapa de la caja
+      `<rect x="15" y="38" width="100" height="19" rx="5" fill="url(#${p}-box)" stroke="${bD}" stroke-width="1.5"/>` +
+      `<rect x="56" y="38" width="18" height="19" fill="url(#${p}-rib)"/>` +
+      `<rect x="20" y="41" width="90" height="4" rx="2" fill="#fff" opacity=".28"/>` +
+      `</g>` +
+      `</svg>`;
+  }
+
+  /* ── Construcción de la sección y modal de promociones ─────── */
+  function mountPromoModal() {
+    if (document.getElementById("xmasPromoModal")) return;
+    const modal = document.createElement("div");
+    modal.className = "xmas-promo-modal";
+    modal.id = "xmasPromoModal";
+    modal.setAttribute("aria-hidden", "true");
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.innerHTML = `
+      <div class="xmas-promo-dialog">
+        <button class="xmas-promo-close" id="xmasPromoClose" aria-label="Cerrar regalo">&times;</button>
+        <div class="xmas-promo-confetti" aria-hidden="true">🎄 ✨ 🎁 ✨ 🎄</div>
+        <span class="xmas-promo-tag" id="xmasPromoTag"></span>
+        <div class="xmas-promo-discount" id="xmasPromoBadge"></div>
+        <h3 class="xmas-promo-title" id="xmasPromoTitle"></h3>
+        <p class="xmas-promo-desc" id="xmasPromoDesc"></p>
+        <ul class="xmas-promo-perks">
+          <li id="xmasPromoPerk1"></li>
+          <li id="xmasPromoPerk2"></li>
+          <li id="xmasPromoPerk3"></li>
+        </ul>
+        <div class="xmas-promo-urgency">
+          <span class="xmas-urgency-dot"></span>
+          <span><strong>Cupos limitados:</strong> solo quedan <strong>3 lugares disponibles</strong> en agenda para arrancar obra antes de diciembre.</span>
+        </div>
+        <a class="btn xmas-promo-cta" id="xmasPromoCta" href="#" target="_blank" rel="noopener noreferrer"></a>
+        <div class="xmas-promo-switcher" id="xmasPromoSwitcher"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const switcher = modal.querySelector("#xmasPromoSwitcher");
+    GIFTS_DATA.forEach((g, idx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "xmas-switch-btn";
+      btn.dataset.idx = idx;
+      btn.innerHTML = `🎁 ${g.label}: ${g.hint}`;
+      btn.addEventListener("click", () => openGiftModal(idx));
+      switcher.appendChild(btn);
+    });
+
+    modal.querySelector("#xmasPromoClose").addEventListener("click", closeGiftModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeGiftModal();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("is-open")) closeGiftModal();
+    });
+  }
+
+  function openGiftModal(index) {
+    mountPromoModal();
+    const g = GIFTS_DATA[index] || GIFTS_DATA[0];
+    const modal = document.getElementById("xmasPromoModal");
+    modal.querySelector("#xmasPromoTag").textContent = g.tag;
+    modal.querySelector("#xmasPromoBadge").textContent = g.badge;
+    modal.querySelector("#xmasPromoTitle").textContent = g.title;
+    modal.querySelector("#xmasPromoDesc").textContent = g.desc;
+    modal.querySelector("#xmasPromoPerk1").textContent = g.perk1;
+    modal.querySelector("#xmasPromoPerk2").textContent = g.perk2;
+    modal.querySelector("#xmasPromoPerk3").textContent = g.perk3;
+
+    const cta = modal.querySelector("#xmasPromoCta");
+    cta.textContent = g.cta;
+    cta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(g.waMsg)}`;
+
+    modal.querySelectorAll(".xmas-switch-btn").forEach((b, i) => {
+      b.classList.toggle("is-active", i === index);
+    });
+
+    document.querySelectorAll(`.xmas-gift-btn[data-gift-index="${index}"]`).forEach((btn) => {
+      btn.classList.add("is-opened");
+    });
+
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeGiftModal() {
+    const modal = document.getElementById("xmasPromoModal");
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function mountChristmasSection() {
+    const targetSection = document.getElementById("navidad-promo");
+    if (targetSection) {
+      const treeSlot = targetSection.querySelector("#xmasTreeSlot");
+      const giftsSlot = targetSection.querySelector("#xmasGiftsSlot");
+      if (treeSlot) treeSlot.innerHTML = buildChristmasTreeSVG();
+      if (giftsSlot) {
+        giftsSlot.innerHTML = GIFTS_DATA.map((g, idx) => `
+          <button type="button" class="xmas-gift-btn" data-gift-index="${idx}" aria-label="Abrir ${g.label}: ${g.hint} - Presupuesto sin cargo más 10% de descuento">
+            <span class="xmas-gift-click-tag">¡Tocá para abrir!</span>
+            ${buildGiftBoxSVG(g, idx)}
+            <span class="xmas-gift-label">${g.label}</span>
+            <span class="xmas-gift-sublabel">${g.hint}</span>
+          </button>
+        `).join("");
+        giftsSlot.querySelectorAll(".xmas-gift-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            openGiftModal(Number(btn.dataset.giftIndex));
+          });
+        });
+      }
+    }
+
+    // Widget flotante de regalo navideño en todas las páginas para acceso rápido
+    if (!document.getElementById("xmasFloatingGift")) {
+      const fab = document.createElement("button");
+      fab.type = "button";
+      fab.id = "xmasFloatingGift";
+      fab.className = "xmas-floating-gift";
+      fab.setAttribute("aria-label", "Abrir regalo navideño: Presupuesto sin cargo + 10% OFF");
+      fab.innerHTML = `
+        <span class="xmas-fab-badge">10% OFF</span>
+        <span class="xmas-fab-icon" aria-hidden="true">🎄🎁</span>
+        <span class="xmas-fab-text">
+          <strong>Regalo de Navidad</strong>
+          <small>Tocá y ganá 10% OFF</small>
+        </span>
+      `;
+      fab.addEventListener("click", () => {
+        const sec = document.getElementById("navidad-promo");
+        if (sec && window.scrollY < 200) {
+          sec.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => openGiftModal(0), 650);
+        } else {
+          openGiftModal(0);
+        }
+      });
+      document.body.appendChild(fab);
+    }
   }
 
   /* ── Montaje en la página ──────────────────────────────────── */
@@ -389,6 +811,7 @@
   function init() {
     document.documentElement.classList.add("xmas-on");
     build();
+    mountChristmasSection();
     let lastW = window.innerWidth, timer;
     window.addEventListener("resize", () => {
       clearTimeout(timer);
@@ -402,4 +825,3 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
-
