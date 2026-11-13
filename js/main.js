@@ -3,10 +3,33 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Configuración de enlaces dinámicos de WhatsApp y año automático
+  // 1. Configuración de enlaces dinámicos de WhatsApp, Redes Sociales y año automático
   const WHATSAPP_NUMBER = "5491136080260";
   const defaultMsg = "Hola Gabriel, vi su página web y quisiera consultar por un presupuesto. ¿Podemos hablar?";
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(defaultMsg)}`;
+
+  // ── Redes sociales (dejar vacío "" para ocultar hasta que la cuenta esté creada)
+  const SOCIAL_LINKS = {
+    facebook:  "https://web.facebook.com/profile.php?id=61596193542571",
+    instagram: "", // Pegar acá el link de Instagram cuando esté creado
+    tiktok:    "", // Pegar acá el link de TikTok cuando esté creado
+    youtube:   "", // Pegar acá el link de YouTube cuando esté creado
+  };
+
+  document.querySelectorAll("[data-social]").forEach((el) => {
+    const net = el.getAttribute("data-social");
+    const url = SOCIAL_LINKS[net];
+    if (url && url.trim() !== "") {
+      el.href = url.trim();
+      el.target = "_blank";
+      el.rel = "noopener noreferrer";
+      el.hidden = false;
+      el.classList.remove("is-hidden");
+    } else {
+      el.hidden = true;
+      el.classList.add("is-hidden");
+    }
+  });
 
   document.querySelectorAll(".whatsapp-link").forEach((link) => {
     if (!link.getAttribute("href") || link.getAttribute("href") === "#") {

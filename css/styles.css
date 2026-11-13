@@ -69,7 +69,83 @@ ul, ol { padding: 0; margin: 0; list-style: none; }
   gap: 16px;
 }
 .topbar span { opacity: .88; }
-.topbar-right-info { opacity: .88; }
+.topbar-right-info {
+  opacity: .92;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── ICONOS DE REDES SOCIALES (topbar, footer y contacto) ───── */
+.social-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.social-link {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.social-link svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  display: block;
+}
+.social-link:hover {
+  transform: translateY(-2px);
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--navy);
+}
+.social-link[data-social="facebook"]:hover {
+  background: #1877f2;
+  border-color: #1877f2;
+  color: #ffffff;
+}
+.topbar .social-link {
+  width: 26px;
+  height: 26px;
+}
+.topbar .social-link svg {
+  width: 14px;
+  height: 14px;
+}
+.social-link[hidden],
+.social-link.is-hidden {
+  display: none !important;
+}
+.contact-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.contact-socials .social-link {
+  width: auto;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  gap: 8px;
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.contact-socials .social-link:hover {
+  background: #1877f2;
+  border-color: #1877f2;
+  color: #fff;
+}
 
 /* ── HEADER / NAVBAR FIJA ───────────────────────────────────── */
 header {
